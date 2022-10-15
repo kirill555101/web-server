@@ -20,7 +20,7 @@ class HTTPRequest
     end
 
     @file_type = @file.split('.').last
-    @url.prepend(folder)
+    @url.prepend(folder) unless metrics_url?
   end
 
   def method_valid?
@@ -33,5 +33,9 @@ class HTTPRequest
 
   def head?
     method == :head
+  end
+
+  def metrics_url?
+    url.start_with?('/metrics')
   end
 end

@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  web_server:
+    container_name: web_server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+
+  node_exporter:
+    container_name: node_exporter
+    image: prom/node-exporter
+    ports:
+      - '9100:9100'

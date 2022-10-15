@@ -3,6 +3,7 @@
 require 'socket'
 
 require_relative 'http_handler'
+require_relative 'http_requests_collector'
 
 class HTTPServer
   def initialize(port, workers_count, folder)
@@ -48,6 +49,8 @@ class HTTPServer
       loop do
         session = server.accept
         break if session.nil?
+
+        HTTPRequestsCollector.instance.inc
 
         result = HTTPHandler.new(session.gets, folder).call
         session.print(result) unless result.nil?

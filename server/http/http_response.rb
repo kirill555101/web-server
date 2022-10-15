@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'http_requests_collector'
+
 class HTTPResponse
   def initialize(request:, status:)
     @request = request
@@ -41,33 +43,46 @@ class HTTPResponse
   end
 
   def content_type
+    return 'Content-Type: text/plain' if request.metrics_url?
+
     case request.file_type
     when 'html'
-      "Content-Type: text/html"
+      'Content-Type: text/html'
     when 'css'
-      "Content-Type: text/css"
+      'Content-Type: text/css'
     when 'js'
-      "Content-Type: text/javascript"
+      'Content-Type: text/javascript'
     when 'jpg'
-      "Content-Type: image/jpeg"
+      'Content-Type: image/jpeg'
     when 'jpeg'
-      "Content-Type: image/jpeg"
+      'Content-Type: image/jpeg'
     when 'png'
-      "Content-Type: image/png"
+      'Content-Type: image/png'
     when 'gif'
-      "Content-Type: image/gif"
+      'Content-Type: image/gif'
     when 'swf'
-      "Content-Type: application/x-shockwave-flash"
+      'Content-Type: application/x-shockwave-flash'
     else
-      "Content-Type: text/plain"
+      'Content-Type: text/plain'
     end
   end
 
   def content_length
-    "Content-Length: #{File.size(request.url)}"
+    length =
+      if request.metrics_url?
+        body.length
+      else
+        File.size(request.url)
+      end
+    "Content-Length: #{length}"
   end
 
   def body
-    open(request.url).read
+    @body ||=
+      if request.metrics_url?
+        HTTPRequestsCollector.instance.body
+      else
+        open(request.url).read
+      end
   end
 end

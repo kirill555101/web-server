@@ -15,6 +15,8 @@ class HTTPHandler
     request = HTTPRequest.new(string, folder)
     return HTTPResponse.new(request: request, status: :not_allowed).call unless request.method_valid?
 
+    return HTTPResponse.new(request: request, status: :ok).call if request.metrics_url?
+
     unless File.exist?(request.url)
       status =
         if request.file == 'index.html'
