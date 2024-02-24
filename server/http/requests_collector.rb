@@ -19,7 +19,6 @@ module HTTP
         "# HELP requests_count Number of requests on server\n" \
         "# TYPE requests_count counter\n" \
         "requests_count #{@count}"
-      @count = 0
       result
     end
   end
