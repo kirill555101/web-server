@@ -15,11 +15,9 @@ module HTTP
     end
 
     def body
-      result =
-        "# HELP requests_count Number of requests on server\n" \
-        "# TYPE requests_count counter\n" \
-        "requests_count #{@count}"
-      result
+      "# HELP requests_count Number of requests on server\n" \
+      "# TYPE requests_count counter\n" \
+      "requests_count #{@count}"
     end
   end
 end
